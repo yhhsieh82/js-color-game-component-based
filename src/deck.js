@@ -13,17 +13,56 @@ export default class Deck extends Component {
         return '.deck';
     }
 
-    constructor(root) {
+    constructor(root, mode) {
         super(root);
 
         this.gameOver = false;
         this.cards = [];
-        const els = root.querySelectorAll(Card.getRootClass());
+
+        //between DOM and the html element:method 1
+        // let els2 = root.querySelectorAll(Card.getRootClass());
+        // let els = [];
+        // if (mode === 0) {
+        //     // els = els2.slice(0, 3);
+        //     for (let i = 0; i < 3; i++) {
+        //       els.push(els2[i]); 
+        //     }
+        // }
+
+        // for (let el of els) {
+        //     const card = new Card(el);
+        //     //when getting the fire from the card 
+        //     card.on('click', this.handleCardClick.bind(this));
+        //     this.cards.push(card);
+        // }
+
+        //method 2
+        let els = root.querySelectorAll(Card.getRootClass());
+        if (mode === 0) {
+            if (els.length === 6) {
+                for (let i = 3; i < 6 ; i++) {
+                    root.removeChild(els[i]);
+                }
+            }
+        }
+        else {
+            if (els.length === 3) {
+                for (let i = 3; i < 6 ; i++) {
+                    let div = document.createElement("div");
+                    div.className += "card";
+                    root.appendChild(div);
+                }
+                els = root.querySelectorAll(Card.getRootClass());
+            } 
+        }
+
         for (let el of els) {
             const card = new Card(el);
+            //when getting the fire from the card 
             card.on('click', this.handleCardClick.bind(this));
             this.cards.push(card);
         }
+
         this.pickedColor = this.pickColor();
     }
 
@@ -51,6 +90,12 @@ export default class Deck extends Component {
             firer.fadeOut();
             this.fire('wrongClick');
         }
+    }
+
+    fadoOutAllCards() {
+        for (let card of this.cards)
+                card.fadeIn("#FFF");
+        this.gameOver = true;
     }
 
     pickColor() {

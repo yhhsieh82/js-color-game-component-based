@@ -14,6 +14,7 @@ export default class Reset extends Component {
     constructor(root) {
         super(root);
 
+        //fire an event for the main.js to coordinate other
         root.addEventListener("click", this.handleDomClick.bind(this));
         this.resetDisplay = root.querySelector(".reset span");
         this.reset();
